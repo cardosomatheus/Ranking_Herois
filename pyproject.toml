@@ -1,0 +1,17 @@
+[project]
+name = "movies"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "matheus",email = "cardosomcds1@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faker (>=40.4.0,<41.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
