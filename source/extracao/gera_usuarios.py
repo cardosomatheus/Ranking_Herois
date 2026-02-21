@@ -26,6 +26,9 @@ class GeradorDeUsuario:
             raise ValueError('O valor precisa ser maior que zero.')
 
         with open(self.PATH_FILE_TXT, 'w+') as file:
+            cabecalho = "nome,email,telefone,cpf,ip_execucao,heroi_id,nota\n"
+            file.write(cabecalho)
+            
             for i in range(num_records):
                 record = {
                     'nome': self.faker.name(),
@@ -35,7 +38,7 @@ class GeradorDeUsuario:
                     'ip_execucao': self.faker.ipv4(),
                     'heroi_id': randint(1, self.obter_ultimo_heroi_id()),
                     'nota': randint(1, 10)
-                }
+                }    
                 row = ",".join(f'"{value}"' for value in record.values())+"\n"
                 file.write(row)
 
@@ -54,5 +57,5 @@ class GeradorDeUsuario:
 
 if __name__ == "__main__":
     gerador = GeradorDeUsuario()
-    gerador.cria_usuarios_fakes(num_records=100)
+    gerador.cria_usuarios_fakes(num_records=10)
     print(gerador.obter_ultimo_heroi_id())
