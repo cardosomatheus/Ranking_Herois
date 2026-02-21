@@ -28,7 +28,7 @@ class GeradorDeUsuario:
         with open(self.PATH_FILE_TXT, 'w+') as file:
             cabecalho = "nome,email,telefone,cpf,ip_execucao,heroi_id,nota\n"
             file.write(cabecalho)
-            
+
             for i in range(num_records):
                 record = {
                     'nome': self.faker.name(),
