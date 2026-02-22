@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import csv
 import os
 from random import randint
+from datetime import datetime, timedelta
 
 
 class GeradorDeUsuario:
@@ -33,12 +34,13 @@ class GeradorDeUsuario:
                 record = {
                     'nome': self.faker.name(),
                     'email': self.faker.email(),
-                    'telefone': self.faker.phone_number(),
+                    'telefone': self.faker.cellphone_number(),
                     'cpf': self.faker.ssn(),
                     'ip_execucao': self.faker.ipv4(),
                     'heroi_id': randint(1, self.obter_ultimo_heroi_id()),
-                    'nota': randint(1, 10)
-                }    
+                    'nota': randint(1, 10),
+                    'data_execucao': self.random_date()
+                }
                 row = ",".join(f'"{value}"' for value in record.values())+"\n"
                 file.write(row)
 
@@ -53,6 +55,17 @@ class GeradorDeUsuario:
                 raise ValueError('O arquivo CSV de heróis está vazio.')
 
             return int(linhas[-1][0])
+
+    def random_date(
+        self,
+        start: datetime = datetime.now() - timedelta(hours=1),
+        end: datetime = datetime.now()
+    ) -> datetime:
+        """Gera uma data aleatória entre o intervalo de start e end."""
+        return self.faker.date_time_between(
+            start_date=start,
+            end_date=end
+        )# .strftime('%d-%m-%Y %H:%M:%S')
 
 
 if __name__ == "__main__":
