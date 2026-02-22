@@ -14,7 +14,7 @@ class TranformacaoHerois:
     load_dotenv()
     schema_herois = StructType([
                 StructField("heroi_id", IntegerType(), False),
-                StructField("name", StringType(), True), 
+                StructField("name", StringType(), True),
                 StructField("Gender", StringType(), True),
                 StructField("Eye_color", StringType(), True),
                 StructField("Race", StringType(), True),
