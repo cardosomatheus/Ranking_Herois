@@ -4,7 +4,7 @@ from source.tranformacao.transformacao_herois import TransformacaoHerois
 
 
 class AssociacaoUsuariosHerois:                                    
-    transformacao_usuarios =  TranformacaoUsuarios()
+    transformacao_usuarios = TranformacaoUsuarios()
     transformacao_herois = TransformacaoHerois()
 
     def __init__(self):
