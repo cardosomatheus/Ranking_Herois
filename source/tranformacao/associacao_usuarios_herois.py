@@ -1,11 +1,29 @@
-                                    # EM DESENVOLVIMENTO
-    def __init__(self):
-        self.spark = SparkSession.builder.appName('usuarios').getOrCreate()
-        self.PATH_FILE_TXT = os.getenv('PATH_FILE_TXT')
+from pyspark.sql import SparkSession, DataFrame
+from source.tranformacao.transformacao_usuarios import TranformacaoUsuarios
+from source.tranformacao.transformacao_herois import TransformacaoHerois
 
-    def associar_herois_e_usuarios(
-        self, df_herois: DataFrame, df_usuarios: DataFrame
-    ) -> DataFrame:
+
+class AssociacaoUsuariosHerois:                                    
+    transformacao_usuarios =  TranformacaoUsuarios()
+    transformacao_herois = TransformacaoHerois()
+
+    def __init__(self):
+        """
+        Inicializa a classe AssociacaoUsuariosHerois e Cria uma sessão Spark.
+        """
+        self.spark = SparkSession.\
+            builder.\
+            appName('usuarios_e_herois').\
+            getOrCreate()
+
+    def associar_herois_e_usuarios(self) -> DataFrame:
+        """
+        Faz a associação (INNE JOIN) entre os DataFrames de usuários e heróis.
+        Retorna um DataFrame resultante da associação.
+        """
+        df_usuarios = self.transformacao_usuarios.executa_pipeline()
+        df_herois = self.transformacao_herois.executa_pipeline()
+
         if len(df_usuarios.take(1)) == 0:
             raise ValueError('Assoc. não feita, DataFrame usuários vazio')
 
@@ -22,9 +40,12 @@
             'nome',
             'email',
             'telefone',
+            'telefone_numerico',
             'cpf',
+            'cpf_numerico',
             'ip_execucao',
             'nota',
+            'data_execucao',
             'heroi_id',
             'name',
             'Gender',
@@ -37,12 +58,8 @@
         )
         return df_herois_e_usuarios
 
-    def extrair_dados_usuarios(self):
-        df_usuarios = self.spark.read.csv(
-            self.PATH_FILE_TXT,
-            header=True,
-            schema=self.schema_usuarios
-        )
-        if len(df_usuarios.take(1)) == 0:
-            raise ValueError('O arquivo de usuários está vazio.')
-        return df_usuarios
+
+if __name__ == "__main__":
+    associacao = AssociacaoUsuariosHerois()
+    df_herois_e_usuarios = associacao.associar_herois_e_usuarios()
+    print(df_herois_e_usuarios.show())
