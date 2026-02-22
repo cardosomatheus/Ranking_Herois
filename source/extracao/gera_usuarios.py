@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 class GeradorDeUsuario:
     load_dotenv()
     PATH_FILE_TXT = os.getenv('PATH_FILE_TXT')
-    PATH_FILE_HEROIX_CSV = os.getenv('PATH_FILE_HEROIX_CSV')
+    PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
 
     def __init__(self):
         self.faker = Faker('pt_BR')
@@ -65,7 +65,7 @@ class GeradorDeUsuario:
         return self.faker.date_time_between(
             start_date=start,
             end_date=end
-        )# .strftime('%d-%m-%Y %H:%M:%S')
+        )
 
 
 if __name__ == "__main__":

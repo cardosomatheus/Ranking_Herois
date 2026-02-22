@@ -11,7 +11,7 @@ from pyspark.sql.types import (
 )
 
 
-class TranformacaoUsuarios:
+class TransformacaoUsuarios:
     load_dotenv()
     schema_usuarios = StructType([
         StructField("nome", StringType(), True),
@@ -30,13 +30,14 @@ class TranformacaoUsuarios:
         Cria uma sessão Spark e defini o caminho do arquivo CSV de usuários.
         """
         self.spark = SparkSession.builder.appName('usuarios').getOrCreate()
-        self.PATH_FILE_USUARIOS_CSV = os.getenv('PATH_FILE_USUARIOS_CSV')
+        self.PATH_FILE_USUARIO_TXT = os.getenv('PATH_FILE_USUARIO_TXT')
 
     def extrair_dados_usuarios(self):
-        if self.PATH_FILE_USUARIOS_CSV is None:
-            raise ValueError('O PATH do arquivo CSV de usuários não definido.')
+        if self.PATH_FILE_USUARIO_TXT is None:
+            raise ValueError('O PATH do arquivo TXT de usuários não definido.')
+
         df_usuarios = self.spark.read.csv(
-            self.PATH_FILE_USUARIOS_CSV,
+            self.PATH_FILE_USUARIO_TXT,
             header=True,
             schema=self.schema_usuarios
         )
@@ -64,6 +65,6 @@ class TranformacaoUsuarios:
 
 
 if __name__ == "__main__":
-    transformacao_usuarios = TranformacaoUsuarios()
+    transformacao_usuarios = TransformacaoUsuarios()
     df_usuarios = transformacao_usuarios.executa_pipeline()
     print(df_usuarios.show())
