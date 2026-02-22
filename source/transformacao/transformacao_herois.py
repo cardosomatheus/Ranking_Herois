@@ -10,7 +10,7 @@ from pyspark.sql.types import (
 )
 
 
-class TranformacaoHerois:
+class TransformacaoHerois:
     load_dotenv()
     schema_herois = StructType([
                 StructField("heroi_id", IntegerType(), False),
@@ -32,17 +32,17 @@ class TranformacaoHerois:
         Cria uma sessão Spark e defini o caminho do arquivo CSV de heróis.
         """
         self.spark = SparkSession.builder.appName('herois').getOrCreate()
-        self.PATH_FILE_HEROIX_CSV = os.getenv('PATH_FILE_HEROIX_CSV')
+        self.PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
 
     def extrair_dados_herois(self) -> DataFrame:
         """
         Extrai os dados dos heróis do arquivo CSV e retorna um DataFrame.
         """
-        if self.PATH_FILE_HEROIX_CSV is None:
+        if self.PATH_FILE_HEROI_CSV is None:
             raise ValueError('O PATH do arquivo CSV de heróis não definido.')
 
         df_herois = self.spark.read.csv(
-            self.PATH_FILE_HEROIX_CSV,
+            self.PATH_FILE_HEROI_CSV,
             header=True,
             schema=self.schema_herois
         )
@@ -50,8 +50,13 @@ class TranformacaoHerois:
             raise ValueError('O arquivo de herois está vazio.')
         return df_herois
 
+    def executa_pipeline(self) -> DataFrame:
+        """Executa o pipeline de transformação dos dados de heróis."""
+        df_herois = self.extrair_dados_herois()
+        return df_herois
+
 
 if __name__ == "__main__":
-    transformacao_herois = TranformacaoHerois()
+    transformacao_herois = TransformacaoHerois()
     df_herois = transformacao_herois.extrair_dados_herois()
     print(df_herois.show())
