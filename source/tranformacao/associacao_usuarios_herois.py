@@ -3,9 +3,7 @@ from source.tranformacao.transformacao_usuarios import TranformacaoUsuarios
 from source.tranformacao.transformacao_herois import TransformacaoHerois
 
 
-class AssociacaoUsuariosHerois:                                    
-    transformacao_usuarios = TranformacaoUsuarios()
-    transformacao_herois = TransformacaoHerois()
+class AssociacaoUsuariosHerois:
 
     def __init__(self):
         """
@@ -15,6 +13,8 @@ class AssociacaoUsuariosHerois:
             builder.\
             appName('usuarios_e_herois').\
             getOrCreate()
+        self.transformacao_usuarios = TranformacaoUsuarios(self.spark)
+        self.transformacao_herois = TransformacaoHerois(self.spark)
 
     def associar_herois_e_usuarios(self) -> DataFrame:
         """
@@ -62,4 +62,4 @@ class AssociacaoUsuariosHerois:
 if __name__ == "__main__":
     associacao = AssociacaoUsuariosHerois()
     df_herois_e_usuarios = associacao.associar_herois_e_usuarios()
-    print(df_herois_e_usuarios.show())
+    df_herois_e_usuarios.show()

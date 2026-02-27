@@ -24,12 +24,12 @@ class TranformacaoUsuarios:
         StructField("data_execucao", TimestampType(), True)
     ])
 
-    def __init__(self):
+    def __init__(self, spark_session: SparkSession):
         """
         Inicializa a classe TranformacaoUsuarios.
         Cria uma sessão Spark e defini o caminho do arquivo CSV de usuários.
         """
-        self.spark = SparkSession.builder.appName('usuarios').getOrCreate()
+        self.spark = spark_session
         self.PATH_FILE_USUARIO_TXT = os.getenv('PATH_FILE_USUARIO_TXT')
 
     def extrair_dados_usuarios(self):

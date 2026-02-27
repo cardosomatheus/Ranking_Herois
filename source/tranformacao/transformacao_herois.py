@@ -26,12 +26,12 @@ class TransformacaoHerois:
                 StructField("Weight", FloatType(), True)
             ])
 
-    def __init__(self):
+    def __init__(self, spark_session: SparkSession):
         """
         Inicializa a classe TranformacaoHerois.
         Cria uma sessão Spark e defini o caminho do arquivo CSV de heróis.
         """
-        self.spark = SparkSession.builder.appName('herois').getOrCreate()
+        self.spark = spark_session
         self.PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
 
     def extrair_dados_herois(self) -> DataFrame:
