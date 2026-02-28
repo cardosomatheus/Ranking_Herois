@@ -1,0 +1,35 @@
+version: 1
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+loggers:
+  faker:
+    level: WARNING
+    handlers: [console]
+    propagate: no
+
+  pyspark:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+
+  py4j:
+    level: WARNING
+    handlers: [console]
+    propagate: no
+    
+  my_logger:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+root:
+  level: INFO
+  handlers: [console]
+
+
