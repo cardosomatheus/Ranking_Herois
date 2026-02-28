@@ -1,3 +1,4 @@
+```bash
 . Gerar dados de usuarios sobre um heroi e sua nota. (ok)
 . extrair dados dos 2 arquivo e juntar-los. (ok)
 . fazer as devidas tranformações.   (ok)
@@ -6,7 +7,7 @@
 . Fazer a carga(merge) D-1 para o banco e apagar o arquivo processado. 
 . orquestrar processo com airflow
 . Jogar todo processo em conteineres dockers.
-
+```
 # Hero Analytics Pipeline
 
 Este projeto consiste em um pipeline de dados para processar e analisar avaliações de heróis enviadas por usuários.
