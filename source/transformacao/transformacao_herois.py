@@ -1,3 +1,4 @@
+import logging
 import os
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession, DataFrame
@@ -8,6 +9,8 @@ from pyspark.sql.types import (
     IntegerType,
     FloatType
 )
+
+logger = logging.getLogger(__name__)
 
 
 class TransformacaoHerois:
@@ -38,6 +41,7 @@ class TransformacaoHerois:
         """
         Extrai os dados dos heróis do arquivo CSV e retorna um DataFrame.
         """
+        logger.info('Extração dos dados de heróis.')
         if self.PATH_FILE_HEROI_CSV is None:
             raise ValueError('O PATH do arquivo CSV de heróis não definido.')
 
@@ -47,7 +51,9 @@ class TransformacaoHerois:
             schema=self.schema_herois
         )
         if len(df_herois.take(1)) == 0:
-            raise ValueError('O arquivo de herois está vazio.')
+            msg = f'O arquivo de herois está vazio. {self.PATH_FILE_HEROI_CSV}'
+            logger.error(msg)
+            raise ValueError(msg)
         return df_herois
 
     def executa_pipeline(self) -> DataFrame:

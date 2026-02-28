@@ -4,6 +4,9 @@ import csv
 import os
 from random import randint
 from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class GeradorDeUsuario:
@@ -20,16 +23,22 @@ class GeradorDeUsuario:
         Os registros gerados são: nome, email, telefone, cpf e ip de execução.
         num_records (int): O número de registros a serem gerados.
         """
+        logger.info(f"Iniciando a geração de {num_records} user fakes.")
+
         if not isinstance(num_records, int):
-            raise TypeError('O Valor precisa ser inteiro. Exempplo: 10')
+            msg = f"Tipo inválido em num_records: {num_records}. Deve ser INT."
+            logger.error(msg)
+            raise TypeError(msg)
 
         if num_records <= 0:
-            raise ValueError('O valor precisa ser maior que zero.')
+            msg = f"Valor de num_records: {num_records} deve ser maior que 0."
+            logger.error(msg)
+            raise ValueError(msg)
 
         with open(self.PATH_FILE_USUARIO_TXT, 'w+') as file:
             cabecalho = "nome,email,telefone,cpf,ip_execucao,heroi_id,nota\n"
             file.write(cabecalho)
-
+            last_heroi_id = self.obter_ultimo_heroi_id()
             for i in range(num_records):
                 record = {
                     'nome': self.faker.name(),
@@ -37,12 +46,13 @@ class GeradorDeUsuario:
                     'telefone': self.faker.cellphone_number(),
                     'cpf': self.faker.ssn(),
                     'ip_execucao': self.faker.ipv4(),
-                    'heroi_id': randint(1, self.obter_ultimo_heroi_id()),
+                    'heroi_id': randint(1, last_heroi_id),
                     'nota': randint(1, 10),
                     'data_execucao': self.random_date()
                 }
                 row = ",".join(f'"{value}"' for value in record.values())+"\n"
                 file.write(row)
+        logger.info(f"Finalizada a geração de {num_records} user fakes.")
 
     def obter_ultimo_heroi_id(self) -> int:
         """Obtém o último ID de herói presente no arquivo CSV."""

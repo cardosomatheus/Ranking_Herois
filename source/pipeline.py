@@ -4,7 +4,6 @@ from source.transformacao.associacao_usuarios_herois import (
     AssociacaoUsuariosHerois
 )
 
-
 if __name__ == "__main__":
     # Gerar os dados dos usuários
     gerador = GeradorDeUsuario()

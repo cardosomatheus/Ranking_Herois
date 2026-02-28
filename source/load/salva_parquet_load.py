@@ -2,6 +2,9 @@ from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
 from dotenv import load_dotenv
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class SalvaParquetLoad:
@@ -19,14 +22,16 @@ class SalvaParquetLoad:
     def load_dataframe_to_parquet(self, dataframe: DataFrame) -> None:
         """Salva o DataFrame em formato Parquet no caminho especificado."""
         if dataframe.take(1) == []:
-            raise ValueError('DataFrame vazio, não é possível salvar')
+            msg = 'O DataFrame está vazio, não é possível salvar em parquet.'
+            logger.error(msg)
+            raise ValueError(msg)
 
         dataframe.write.parquet(
             path=self.output_path,
             mode='overwrite',
             compression='snappy'
         )
-        print(f"DataFrame salvo com sucesso em {self.output_path}")
+        logger.info(f"DataFrame salvo com sucesso em {self.output_path}")
 
 
 if __name__ == "__main__":

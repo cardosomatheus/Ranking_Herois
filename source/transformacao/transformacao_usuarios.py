@@ -1,3 +1,4 @@
+import logging
 import os
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession, DataFrame
@@ -9,6 +10,8 @@ from pyspark.sql.types import (
     IntegerType,
     TimestampType
 )
+
+logger = logging.getLogger(__name__)
 
 
 class TranformacaoUsuarios:
@@ -33,6 +36,8 @@ class TranformacaoUsuarios:
         self.spark = spark_session
 
     def extrair_dados_usuarios(self):
+        """Extração dos dados de usuários."""
+        logger.info('Extração dos dados de usuários.')
         if self.PATH_FILE_USUARIO_TXT is None:
             raise ValueError('O PATH do arquivo TXT de usuários não definido.')
 
@@ -42,11 +47,14 @@ class TranformacaoUsuarios:
             schema=self.schema_usuarios
         )
         if len(df_usuarios.take(1)) == 0:
-            raise ValueError('O arquivo de usuarios está vazio.')
+            msg = f'O arquivo de USER está vazio. {self.PATH_FILE_USUARIO_TXT}'
+            logger.error(msg)
+            raise ValueError(msg)
         return df_usuarios
 
     def padroniza_dataframe_usuario(self, df_usuarios: DataFrame) -> DataFrame:
         """Padroniza o DataFrame de usuários."""
+        logger.info('Padronização do DataFrame de usuários.')
         df_usuarios = df_usuarios.withColumn(
             'cpf_numerico', regexp_replace(col('cpf'), r'\D', '')
         )

@@ -1,6 +1,9 @@
 from pyspark.sql import SparkSession, DataFrame
 from source.transformacao.transformacao_usuarios import TranformacaoUsuarios
 from source.transformacao.transformacao_herois import TransformacaoHerois
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AssociacaoUsuariosHerois:
@@ -13,6 +16,7 @@ class AssociacaoUsuariosHerois:
             builder.\
             appName('usuarios_e_herois').\
             getOrCreate()
+        self.spark.sparkContext.setLogLevel("ERROR") 
         self.transformacao_usuarios = TranformacaoUsuarios(self.spark)
         self.transformacao_herois = TransformacaoHerois(self.spark)
 
@@ -21,15 +25,11 @@ class AssociacaoUsuariosHerois:
         Faz a associação (INNE JOIN) entre os DataFrames de usuários e heróis.
         Retorna um DataFrame resultante da associação.
         """
+        logger.info('Processo de Associação entre usuários e heróis.')
         df_usuarios = self.transformacao_usuarios.executa_pipeline()
         df_herois = self.transformacao_herois.executa_pipeline()
 
-        if len(df_usuarios.take(1)) == 0:
-            raise ValueError('Assoc. não feita, DataFrame usuários vazio')
-
-        if len(df_herois.take(1)) == 0:
-            raise ValueError('Assoc. não feita, DataFrame herois vazio')
-
+        logger.info('Inciando a associação entre os user e heróis.')
         df_herois_e_usuarios = df_usuarios.join(
             other=df_herois,
             on='heroi_id',
@@ -56,6 +56,8 @@ class AssociacaoUsuariosHerois:
             'Alignment',
             'Weight'
         )
+
+        logger.info('Associação Concluída com sucesso.')
         return df_herois_e_usuarios
 
 
