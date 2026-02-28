@@ -8,13 +8,13 @@ from datetime import datetime, timedelta
 
 class GeradorDeUsuario:
     load_dotenv()
-    PATH_FILE_TXT = os.getenv('PATH_FILE_TXT')
-    PATH_FILE_HEROIX_CSV = os.getenv('PATH_FILE_HEROIX_CSV')
+    PATH_FILE_USUARIO_TXT = os.getenv('PATH_FILE_USUARIO_TXT')
+    PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
 
     def __init__(self):
         self.faker = Faker('pt_BR')
 
-    def cria_usuarios_fakes(self, num_records: int) -> list:
+    def cria_usuarios_fakes(self, num_records: int = 10) -> list:
         """
         Gera dados Fakes e os salva em um arquivo .txt
         Os registros gerados são: nome, email, telefone, cpf e ip de execução.
@@ -26,7 +26,7 @@ class GeradorDeUsuario:
         if num_records <= 0:
             raise ValueError('O valor precisa ser maior que zero.')
 
-        with open(self.PATH_FILE_TXT, 'w+') as file:
+        with open(self.PATH_FILE_USUARIO_TXT, 'w+') as file:
             cabecalho = "nome,email,telefone,cpf,ip_execucao,heroi_id,nota\n"
             file.write(cabecalho)
 
@@ -46,7 +46,7 @@ class GeradorDeUsuario:
 
     def obter_ultimo_heroi_id(self) -> int:
         """Obtém o último ID de herói presente no arquivo CSV."""
-        with open(self.PATH_FILE_HEROIX_CSV, 'r', encoding='utf-8') as file:
+        with open(self.PATH_FILE_HEROI_CSV, 'r', encoding='utf-8') as file:
             leitor = csv.reader(file)
             linhas = list(leitor)
 
@@ -65,10 +65,11 @@ class GeradorDeUsuario:
         return self.faker.date_time_between(
             start_date=start,
             end_date=end
-        )# .strftime('%d-%m-%Y %H:%M:%S')
+        )
 
 
 if __name__ == "__main__":
     gerador = GeradorDeUsuario()
+    print(gerador.PATH_FILE_HEROI_CSV)
+    print(gerador.PATH_FILE_USUARIO_TXT)
     gerador.cria_usuarios_fakes(num_records=10)
-    print(gerador.obter_ultimo_heroi_id())
