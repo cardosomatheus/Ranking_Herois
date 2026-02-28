@@ -16,7 +16,7 @@ class AssociacaoUsuariosHerois:
             builder.\
             appName('usuarios_e_herois').\
             getOrCreate()
-        self.spark.sparkContext.setLogLevel("ERROR") 
+        self.spark.sparkContext.setLogLevel("ERROR")
         self.transformacao_usuarios = TranformacaoUsuarios(self.spark)
         self.transformacao_herois = TransformacaoHerois(self.spark)
 
