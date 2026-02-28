@@ -7,10 +7,11 @@
 . orquestrar processo com airflow
 . Jogar todo processo em conteineres dockers.
 
-Hero Analytics Pipeline
+# Hero Analytics Pipeline
 
 Este projeto consiste em um pipeline de dados para processar e analisar avaliações de heróis enviadas por usuários.
 Arquitetura e Fluxo de Dados
+```bash
     Ingestão: Coleta de arquivos brutos contendo as pontuações dos usuários(Dados fakes).
     Processamento (PySpark): Limpeza, normalização e tratamento dos dados brutos.
     Armazenamento: Conversão dos dados processados para o formato Parquet (otimizando performance e custo).
@@ -24,3 +25,4 @@ Stack Técnica.
     Orquestração: Apache Airflow
     Formato de Saída: Parquet
     Destino: Banco de Dados (SQL)
+```
