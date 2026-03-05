@@ -1,0 +1,14 @@
+services:
+
+#  airflow:
+#    build: 
+#      context: airflow
+#      dockerfile: airflow.Dockerfile
+#    command: standalone
+#    ports:
+#      - "8080:8080"
+
+  app:
+    build: 
+      dockerfile: app.Dockerfile
+    
