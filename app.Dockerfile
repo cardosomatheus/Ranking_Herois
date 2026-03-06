@@ -1,34 +1,26 @@
 FROM python:3.12-slim
 
-# Configura o ambiente de trabalho.
 WORKDIR /movies
 
-# Instala o curl para baixar o Poetry e o Java para o Spark.
-RUN apt-get update && apt-get install -y --no-install-recommends curl 
+ENV POETRY_HOME=/opt/poetry \
+    POETRY_VIRTUALENVS_CREATE=false \
+    PATH="/opt/poetry/bin:/usr/lib/jvm/java-21-openjdk-amd64/bin:$PATH"
 
-# Variaveis do poetry e java
-ENV POETRY_HOME=/opt/poetry
-ENV POETRY_VIRTUALENVS_CREATE=false
-ENV PATH="$POETRY_HOME/bin:$PATH"
-ENV JAVA_HOME=/usr/lib/jvm/default-java
-
-
-# Instala o Poetry e as dependências do projeto
-RUN curl -sSL https://install.python-poetry.org | python3 -
-RUN poetry install --no-root
-
-# Instala o Java necessário para o Spark
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       default-jre-headless \
-    && apt-get autoremove -yqq --purge \
+        curl \
+        openjdk-21-jre-headless \
+    && curl -sSL https://install.python-poetry.org | python3 - \
+    && apt-get purge -y curl \
+    && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+COPY pyproject.toml poetry.lock /movies/
 
-COPY logging.yaml /movies/logging.yaml
+RUN poetry install --no-root --no-interaction --no-ansi
+
 COPY source/ /movies/source/
-COPY poetry.lock pyproject.toml /movies/
-COPY teste.py /movies/
+COPY logging.yaml .env /movies/
 
-CMD [ "python3", "teste.py" ]
+CMD ["python3", "-m", "source.main"]

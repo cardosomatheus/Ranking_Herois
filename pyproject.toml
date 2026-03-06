@@ -6,12 +6,13 @@ authors = [
     {name = "matheus",email = "cardosomcds1@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "faker (>=40.4.0,<41.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",
     "pyspark (>=4.1.1,<5.0.0)",
-    "pyyaml (>=6.0.3,<7.0.0)"
+    "pyyaml (>=6.0.3,<7.0.0)",
+    "apache-airflow (>=3.1.3)"
 ]
 
 
