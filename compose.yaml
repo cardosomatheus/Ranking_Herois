@@ -1,14 +1,17 @@
 services:
 
-#  airflow:
-#    build: 
-#      context: airflow
-#      dockerfile: airflow.Dockerfile
-#    command: standalone
-#    ports:
-#      - "8080:8080"
+  airflow:
+    build:
+      dockerfile: airflow.Dockerfile
+    command: standalone
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
 
-  app:
-    build: 
-      dockerfile: app.Dockerfile
+#  app:
+#    build: 
+#      dockerfile: app.Dockerfile
     
