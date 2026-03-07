@@ -3,3 +3,10 @@ __pycache__/
 pontuacao_usuarios.txt
 source/datasets/processed/*
 logs/
+
+
+# Define o usuário 50000 (Airflow) como dono das pastas mapeadas
+sudo chown -R 50000:0 ./airflow/dags ./airflow/logs ./airflow/plugins
+
+# Garante permissão de leitura e escrita
+sudo chmod -R 775 ./airflow/dags ./airflow/logs ./airflow/plugins

@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # Salvar o DataFrame resultante em formato Parquet
     classe_load = SalvaParquetLoad(associacao.spark)
     classe_load.load_dataframe_to_parquet(df_herois_e_usuarios)
-
+    associacao.spark.stop()
     end_banner = """
     ###########################################################
     #                                                         #
