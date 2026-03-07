@@ -14,7 +14,6 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-# 1. Instala o JDK e dependências básicas
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
          openjdk-17-jdk \
@@ -24,12 +23,8 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-# 2. Configura a variável JAVA_HOME (O Spark precisa disso para saber onde o Java está)
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 RUN export JAVA_HOME
-
-
-
 
 USER airflow
 COPY pyproject.toml poetry.lock logging.yaml .env ./

@@ -1,27 +1,27 @@
-from airflow.sdk import dag, task
+from airflow.sdk import dag, task, chain
 from datetime import datetime, timezone, timedelta
-# Testando o comportamento do airflow via docker
-
 
 import logging
 from source.extracao.gera_usuarios import GeradorDeUsuario
-# from source.load.salva_parquet_load import SalvaParquetLoad
+from source.load.salva_parquet_load import SalvaParquetLoad
 from source.transformacao.associacao_usuarios_herois import (
     AssociacaoUsuariosHerois
 )
 
+
 logger = logging.getLogger(__name__)
+default_args = {
+    'retries': 2,
+    'retry_delay': timedelta(minutes=2)
+}
 
 
 @dag(start_date=datetime.now(timezone.utc),
      dag_id="Ranking_Herois",
-     schedule=timedelta(minutes=30),
+     schedule=timedelta(hours=1),
      description="Pontuação de herois da marvel.",
      catchup=False,
-     default_args={
-         'retries': 2,
-         'retry_delay': timedelta(minutes=5)
-        },
+     default_args=default_args,
      tags=['Herois', 'Ranking', 'ETL'])
 def ranking_heroes_dag():
 
@@ -41,19 +41,39 @@ def ranking_heroes_dag():
         logger.info(start_banner)
 
     @task()
-    def pontuacao_usuario_sobre_herois():
+    def gera_pontuacao_usuario_sobre_herois():
         GeradorDeUsuario().cria_usuarios_fakes(100)
 
     @task()
-    def concatena_pontuacao_herois():
+    def concatena_bases_salvando_em_parquet():
         associacao = AssociacaoUsuariosHerois()
         df_herois_e_usuarios = associacao.associar_herois_e_usuarios()
-        df_herois_e_usuarios.head(2)
-        return df_herois_e_usuarios
+        df_herois_e_usuarios.show(5)
 
-    iniciando_pipeline() \
-        >> pontuacao_usuario_sobre_herois() \
-        >> concatena_pontuacao_herois()
+        # Salvando em parquet
+        classe_load = SalvaParquetLoad(associacao.spark)
+        classe_load.load_dataframe_to_parquet(df_herois_e_usuarios)
+
+    @task()
+    def finalizando_pipeline():
+        end_banner = """
+        ###########################################################
+        #                                                         #
+        #   _____  _   _  ____                                    #
+        #  | ____|| \ | ||  _ \                                   #
+        #  |  _|  |  \| || | | |                                  #
+        #  | |___ | |\  || |_| |                                  #
+        #  |_____||_| \_||____/                                   #
+        #                                                         #
+        ###########################################################
+        """
+        logger.info(end_banner)
+
+    inicio = iniciando_pipeline()
+    pontuacao = gera_pontuacao_usuario_sobre_herois()
+    df_herois = concatena_bases_salvando_em_parquet()
+    fim = finalizando_pipeline()
+    chain(inicio, pontuacao, df_herois, fim)
 
 
 ranking_heroes_dag()
