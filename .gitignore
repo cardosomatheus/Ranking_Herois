@@ -2,6 +2,7 @@
 __pycache__/
 pontuacao_usuarios.txt
 source/datasets/processed/*
+source/datasets/silver_path/*
 logs/
 
 

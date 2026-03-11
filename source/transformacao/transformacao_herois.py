@@ -65,6 +65,10 @@ class TransformacaoHerois:
 
 
 if __name__ == "__main__":
-    transformacao_herois = TransformacaoHerois()
+    spark = SparkSession.\
+            builder.\
+            appName('usuarios_e_herois').\
+            getOrCreate()
+    transformacao_herois = TransformacaoHerois(spark_session=spark)
     df_herois = transformacao_herois.executa_pipeline()
     print(df_herois.show())

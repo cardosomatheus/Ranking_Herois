@@ -55,14 +55,18 @@ class TranformacaoUsuarios:
     def padroniza_dataframe_usuario(self, df_usuarios: DataFrame) -> DataFrame:
         """Padroniza o DataFrame de usuários."""
         logger.info('Padronização do DataFrame de usuários.')
+
         df_usuarios = df_usuarios.withColumn(
-            'cpf_numerico', regexp_replace(col('cpf'), r'\D', '')
+            'cpf_numerico',
+            regexp_replace(col('cpf'), r'\D', '')
         )
 
         df_usuarios = df_usuarios.withColumn(
-            'telefone_numerico', regexp_replace(col('telefone'), r'\D', '')
+            'telefone_numerico',
+            regexp_replace(col('telefone'), r'\D', '')
         )
 
+        df_usuarios.dropDuplicates(['heroi_id', 'cpf_numerico'])
         return df_usuarios
 
     def executa_pipeline(self) -> DataFrame:
@@ -73,6 +77,10 @@ class TranformacaoUsuarios:
 
 
 if __name__ == "__main__":
-    transformacao_usuarios = TranformacaoUsuarios()
+    spark = SparkSession.\
+            builder.\
+            appName('usuarios_e_herois').\
+            getOrCreate()
+    transformacao_usuarios = TranformacaoUsuarios(spark_session=spark)
     df_usuarios = transformacao_usuarios.executa_pipeline()
-    print(df_usuarios.show())
+    df_usuarios.show()
