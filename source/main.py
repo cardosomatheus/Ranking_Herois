@@ -15,6 +15,7 @@ def configura_setup_logging(file_path: str):
 
 configura_setup_logging('logging.yaml')
 if __name__ == "__main__":
+    from pyspark.sql import SparkSession 
     from source.extracao.gera_usuarios import GeradorDeUsuario
     from source.load.salva_parquet_load import SalvaParquetLoad
     from source.transformacao.associacao_usuarios_herois import (
@@ -34,18 +35,23 @@ if __name__ == "__main__":
 
     logger = logging.getLogger(__name__)
     logger.info(start_banner)
+    spark = SparkSession.\
+        builder.\
+        appName('ranking de herois').\
+        getOrCreate()
 
-    # Gerar os dados dos usuários fakes e salvar em um arquivo.
+    # CAMADA BRONZE
     gerador = GeradorDeUsuario()
-    gerador.cria_usuarios_fakes(100)
+    gerador.cria_usuarios_fakes(1000)
 
-    # Criar a sessão Spark e associar os dados dos usuários e heróis
-    associacao = AssociacaoUsuariosHerois()
-    df_herois_e_usuarios = associacao.associar_herois_e_usuarios()
+    # CAMADA SILVER
+    associacao = AssociacaoUsuariosHerois(spark)
+    associacao.executa_pipeline()
 
-    # Salvar o DataFrame resultante em formato Parquet
-    classe_load = SalvaParquetLoad(associacao.spark)
-    classe_load.load_dataframe_to_parquet(df_herois_e_usuarios)
+    # CAMADA GOLD
+    classe_load = SalvaParquetLoad(spark)
+    classe_load.executa_pipeline()
+
     associacao.spark.stop()
     end_banner = """
     ###########################################################
