@@ -17,7 +17,7 @@ class GeradorDeUsuario:
     def __init__(self):
         self.faker = Faker('pt_BR')
 
-    def cria_usuarios_fakes(self, num_records: int = 10) -> list:
+    def cria_usuarios_fakes(self, num_records: int = 1000) -> list:
         """
         Gera dados Fakes e os salva em um arquivo .txt
         Os registros gerados são: nome, email, telefone, cpf e ip de execução.
@@ -82,4 +82,4 @@ if __name__ == "__main__":
     gerador = GeradorDeUsuario()
     print(gerador.PATH_FILE_HEROI_CSV)
     print(gerador.PATH_FILE_USUARIO_TXT)
-    gerador.cria_usuarios_fakes(num_records=10)
+    gerador.cria_usuarios_fakes(num_records=1000)
