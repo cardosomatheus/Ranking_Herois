@@ -2,7 +2,7 @@ from airflow.sdk import dag, task, chain
 from datetime import datetime, timezone, timedelta
 from pyspark.sql import SparkSession
 import logging
-from source.extracao.gera_usuarios import GeradorDeUsuario
+from source.extracao.usuarios_bronze import GeradorDeUsuario
 from source.load.salva_parquet_load import SalvaParquetLoad
 from source.transformacao.associacao_usuarios_herois import (
     AssociacaoUsuariosHerois

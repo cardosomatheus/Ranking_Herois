@@ -8,6 +8,7 @@ handlers:
     level: DEBUG
     formatter: simple
     stream: ext://sys.stdout
+
 loggers:
   faker:
     level: WARNING

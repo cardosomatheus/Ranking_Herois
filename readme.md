@@ -3,7 +3,6 @@
 Este projeto consiste em um pipeline de dados para processar avaliações de heróis da marvel enviadas por usuários.
 Arquitetura e Fluxo de Dados.
 
-
 ```bash
     Ingestão: Coleta de arquivos brutos contendo as pontuações dos usuários(Dados fakes).
     Processamento (PySpark): Limpeza, normalização e tratamento dos dados brutos.
@@ -17,14 +16,12 @@ Stack Técnica.
     Orquestração: Apache Airflow
     Formato de Saída: Parquet
 ```
-🛠️ Pré-requisitos
+Pré-requisitos:
 Antes de iniciar, certifique-se de ter instalado em sua máquina:
-
 JDK 21
 Python 3.10+
 Poetry
 Docker e Docker Compose
-
 
 1. Configurar o JAVA_HOME
 Para que o projeto funcione corretamente, a variável de ambiente JAVA_HOME deve apontar para a instalação do JDK 21.

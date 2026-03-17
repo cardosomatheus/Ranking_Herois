@@ -16,7 +16,7 @@ def configura_setup_logging(file_path: str):
 configura_setup_logging('logging.yaml')
 if __name__ == "__main__":
     from pyspark.sql import SparkSession 
-    from source.extracao.gera_usuarios import GeradorDeUsuario
+    from source.extracao.usuarios_bronze import GeradorDeUsuario
     from source.load.salva_parquet_load import SalvaParquetLoad
     from source.transformacao.associacao_usuarios_herois import (
         AssociacaoUsuariosHerois
