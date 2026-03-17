@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 class TransformacaoHerois:
     load_dotenv()
-    PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
+    BRONZE_PATH_HEROI = os.getenv('BRONZE_PATH_HEROI')
+    SILVER_PATH_HEROI = os.getenv('SILVER_PATH_HEROI')
     schema_herois = StructType([
                 StructField("heroi_id", IntegerType(), False),
                 StructField("name", StringType(), True),
@@ -30,45 +31,44 @@ class TransformacaoHerois:
                 StructField("Weight", FloatType(), True)
             ])
 
-    def __init__(self, spark_session: SparkSession):
+    def __init__(self):
         """
         Inicializa a classe TranformacaoHerois.
         Cria uma sessão Spark.
         """
-        self.spark = spark_session
+        self.spark = SparkSession.\
+            builder.\
+            appName('ranking de herois').\
+            getOrCreate()
 
-    def extrair_dados_herois(self) -> DataFrame:
-        """
-        Extrai os dados dos heróis do arquivo CSV e retorna um DataFrame.
-        """
-        logger.info('Extração dos dados de heróis.')
-        if self.PATH_FILE_HEROI_CSV is None:
-            raise ValueError('O PATH do arquivo CSV de heróis não definido.')
+    def ler_csv_heroi(self) -> DataFrame:
+        logger.info('Lendo CSV heróis na camada BRONZE.')
+        if not self.BRONZE_PATH_HEROI:
+            raise ValueError('O PATH do arquivo CSV de Herois não definido.')
 
-        df_herois = self.spark.read.csv(
-            self.PATH_FILE_HEROI_CSV,
+        dataframe = self.spark.read.csv(
+            self.BRONZE_PATH_HEROI,
             header=True,
             schema=self.schema_herois
         )
-        if len(df_herois.take(1)) == 0:
-            msg = f'O arquivo de herois está vazio. {self.PATH_FILE_HEROI_CSV}'
-            logger.error(msg)
-            raise ValueError(msg)
-        return df_herois
 
-    def executa_pipeline(self) -> DataFrame:
-        """
-        Executa a transformação dos dados dos heróis e retorna um DataFrame.
-        """
-        df_herois = self.extrair_dados_herois()
-        return df_herois
+        return dataframe
+
+    def salva_csv_heroi_em_formato_parquet(self, dataframe: DataFrame):
+        logger.info('Salvando Parquet heróis na camada BRONZE.')
+        dataframe.write.parquet(
+            path=self.SILVER_PATH_HEROI,
+            mode='overwrite',
+            compression='snappy'
+        )
+
+        logger.info('Parquet heroi salvo na camada SILVER')
+
+    def executa_pipeline(self):
+        dataframe = self.ler_csv_heroi()
+        self.salva_csv_heroi_em_formato_parquet(dataframe)
 
 
 if __name__ == "__main__":
-    spark = SparkSession.\
-            builder.\
-            appName('usuarios_e_herois').\
-            getOrCreate()
-    transformacao_herois = TransformacaoHerois(spark_session=spark)
+    transformacao_herois = TransformacaoHerois()
     df_herois = transformacao_herois.executa_pipeline()
-    print(df_herois.show())
