@@ -18,9 +18,9 @@ class SalvaParquetLoad:
     SILVER_PATH_FILE = os.getenv('SILVER_PATH_FILE')
     GOLD_PATH_FILE = os.getenv('GOLD_PATH_FILE')
 
-    def __init__(self, spark: SparkSession):
+    def __init__(self, spark_session: SparkSession):
         """Inicializa a classe com uma instância do SparkSession."""
-        self.spark = spark
+        self.spark_session = spark_session
         self.name_file = 'file_processed_load.parquet'
 
     def executa_pipeline(self):
@@ -37,7 +37,7 @@ class SalvaParquetLoad:
             logger.error(msg)
             raise ValueError(msg)
 
-        dataframe = self.spark.read.parquet(self.SILVER_PATH_FILE)
+        dataframe = self.spark_session.read.parquet(self.SILVER_PATH_FILE)
         dataframe.show(5)
         return dataframe
 

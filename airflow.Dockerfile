@@ -5,6 +5,11 @@ ENV POETRY_HOME=/opt/poetry \
     POETRY_VIRTUALENVS_CREATE=false \
     PATH="/opt/poetry/bin:$PATH"
 
+ENV _AIRFLOW_WWW_USER_FIRSTNAME=Airflow1
+ENV _AIRFLOW_WWW_USER_LASTNAME=Airflow1
+ENV _AIRFLOW_WWW_USER_EMAIL=airflowadmin@example.com
+ENV _AIRFLOW_WWW_USER_ROLE=Admin 
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
       curl \       

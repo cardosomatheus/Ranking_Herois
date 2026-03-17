@@ -1,29 +1,55 @@
-```bash
-. Gerar dados de usuarios sobre um heroi e sua nota. (ok)
-. extrair dados dos 2 arquivo e juntar-los. (ok)
-. fazer as devidas tranformações.   (ok)
-. fazer a carga do arquivo tratado para parquet(ok)
-. Definir Logs no processo.(pesquisar sobre) (OK)
-. Fazer a carga(merge) D-1 para o banco e apagar o arquivo processado. 
-. orquestrar processo com airflow
-. Jogar todo processo em conteineres dockers.
-```
 # Hero Analytics Pipeline
 
-Este projeto consiste em um pipeline de dados para processar e analisar avaliações de heróis enviadas por usuários.
-Arquitetura e Fluxo de Dados
+Este projeto consiste em um pipeline de dados para processar avaliações de heróis da marvel enviadas por usuários.
+Arquitetura e Fluxo de Dados.
+
+
 ```bash
     Ingestão: Coleta de arquivos brutos contendo as pontuações dos usuários(Dados fakes).
     Processamento (PySpark): Limpeza, normalização e tratamento dos dados brutos.
     Armazenamento: Conversão dos dados processados para o formato Parquet (otimizando performance e custo).
-    Carga (D+1): Carregamento automatizado dos dados para o banco de dados com um dia de atraso (D+1).
     Orquestração: Gerenciamento de todo o fluxo e usando Apache Airflow.
-    Análise: Criação de Views SQL para extração de analsie descritivas sobre heróis.
 
 Stack Técnica.
+    Controle: Poetry
     Linguagem: Python
     Processamento: PySpark
     Orquestração: Apache Airflow
     Formato de Saída: Parquet
-    Destino: Banco de Dados (SQL)
+```
+🛠️ Pré-requisitos
+Antes de iniciar, certifique-se de ter instalado em sua máquina:
+
+JDK 21
+Python 3.10+
+Poetry
+Docker e Docker Compose
+
+
+1. Configurar o JAVA_HOME
+Para que o projeto funcione corretamente, a variável de ambiente JAVA_HOME deve apontar para a instalação do JDK 21.
+```bash
+export JAVA_HOME=/caminho/para/seu/jdk-21
+export PATH=$JAVA_HOME/bin:$PATH
+```
+
+2. Instalar Dependências (Poetry)
+O projeto utiliza o Poetry para gerenciar as dependências do Python. Com o Poetry instalado, execute:
+```bash
+# Instala as dependências listadas no pyproject.toml
+poetry install
+
+# Ativa o ambiente virtual
+poetry shell
+```
+
+3. Executar com Docker Compose
+Para subir os serviços necessários (como bancos de dados ou ferramentas de mensageria), utilize o comando:
+```bash
+docker-compose up -d
+```
+
+Após a subida, a Dag contida no path airflow/dags Estara disponivel para execução no link:
+```bash
+http://localhost:8080/
 ```

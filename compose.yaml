@@ -19,6 +19,3 @@ services:
 networks:
   airflow-net:
     driver: bridge
-
-volumes:
-  spark-data:
