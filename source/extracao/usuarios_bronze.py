@@ -1,6 +1,6 @@
+from source.extracao.herois_bronze import GeraHeroisBronze
 from faker import Faker
 from dotenv import load_dotenv
-import csv
 import os
 from random import randint
 from datetime import datetime, timedelta
@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 class GeradorDeUsuario:
     load_dotenv()
-    PATH_FILE_USUARIO_TXT = os.getenv('PATH_FILE_USUARIO_TXT')
-    PATH_FILE_HEROI_CSV = os.getenv('PATH_FILE_HEROI_CSV')
+    BRONZE_PATH_USUARIO = os.getenv('BRONZE_PATH_USUARIO')
 
     def __init__(self):
         self.faker = Faker('pt_BR')
+        self.herois_bronze = GeraHeroisBronze()
 
     def cria_usuarios_fakes(self, num_records: int = 1000) -> list:
         """
@@ -35,10 +35,11 @@ class GeradorDeUsuario:
             logger.error(msg)
             raise ValueError(msg)
 
-        with open(self.PATH_FILE_USUARIO_TXT, 'w+') as file:
+        with open(self.BRONZE_PATH_USUARIO, 'w+') as file:
             cabecalho = "nome,email,telefone,cpf,ip_execucao,heroi_id,nota\n"
             file.write(cabecalho)
-            last_heroi_id = self.obter_ultimo_heroi_id()
+            ultimo_heroi_id = self.herois_bronze.buscar_ultimo_id_heroi_csv()
+
             for i in range(num_records):
                 record = {
                     'nome': self.faker.name(),
@@ -46,32 +47,23 @@ class GeradorDeUsuario:
                     'telefone': self.faker.cellphone_number(),
                     'cpf': self.faker.ssn(),
                     'ip_execucao': self.faker.ipv4(),
-                    'heroi_id': randint(1, last_heroi_id),
+                    'heroi_id': randint(1, ultimo_heroi_id),
                     'nota': randint(1, 10),
-                    'data_execucao': self.random_date()
+                    'data_execucao': self.obter_horario_entre_intervalo()
                 }
                 row = ",".join(f'"{value}"' for value in record.values())+"\n"
                 file.write(row)
         logger.info(f"Finalizada a geração de {num_records} user fakes.")
 
-    def obter_ultimo_heroi_id(self) -> int:
-        """Obtém o último ID de herói presente no arquivo CSV."""
-        with open(self.PATH_FILE_HEROI_CSV, 'r', encoding='utf-8') as file:
-            leitor = csv.reader(file)
-            linhas = list(leitor)
-
-            if len(linhas) <= 1:
-                # O arquivo tem só o cabeçalho ou está vazio.
-                raise ValueError('O arquivo CSV de heróis está vazio.')
-
-            return int(linhas[-1][0])
-
-    def random_date(
+    def obter_horario_entre_intervalo(
         self,
         start: datetime = datetime.now() - timedelta(hours=1),
         end: datetime = datetime.now()
     ) -> datetime:
-        """Gera uma data aleatória entre o intervalo de start e end."""
+        """
+        Obtem um horario aleatorio entre entre o intervalo de start e end.
+        Por padrão o intervalo é de 1 hora.
+        """
         return self.faker.date_time_between(
             start_date=start,
             end_date=end
@@ -80,6 +72,4 @@ class GeradorDeUsuario:
 
 if __name__ == "__main__":
     gerador = GeradorDeUsuario()
-    print(gerador.PATH_FILE_HEROI_CSV)
-    print(gerador.PATH_FILE_USUARIO_TXT)
-    gerador.cria_usuarios_fakes(num_records=1000)
+    gerador.cria_usuarios_fakes(num_records=10000)
