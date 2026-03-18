@@ -55,7 +55,7 @@ class TransformacaoHerois:
         return dataframe
 
     def salva_csv_heroi_em_formato_parquet(self, dataframe: DataFrame):
-        logger.info('Salvando Parquet heróis na camada BRONZE.')
+        logger.info('Salvando Parquet heróis na camada SILVER.')
         dataframe.write.parquet(
             path=self.SILVER_PATH_HEROI,
             mode='overwrite',
