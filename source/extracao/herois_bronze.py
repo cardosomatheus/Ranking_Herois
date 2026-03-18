@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GeraHeroisBronze:
+class BronzeHerois:
     load_dotenv()
     BRONZE_PATH_HEROI = os.getenv('BRONZE_PATH_HEROI')
 

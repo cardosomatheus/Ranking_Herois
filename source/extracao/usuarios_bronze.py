@@ -1,4 +1,4 @@
-from source.extracao.herois_bronze import GeraHeroisBronze
+from source.extracao.herois_bronze import BronzeHerois
 from faker import Faker
 from dotenv import load_dotenv
 import os
@@ -9,13 +9,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GeradorDeUsuario:
+class BronzeUsuario:
     load_dotenv()
     BRONZE_PATH_USUARIO = os.getenv('BRONZE_PATH_USUARIO')
 
     def __init__(self):
         self.faker = Faker('pt_BR')
-        self.herois_bronze = GeraHeroisBronze()
+        self.herois_bronze = BronzeHerois()
 
     def cria_usuarios_fakes(self, num_records: int = 1000) -> list:
         """
@@ -71,5 +71,5 @@ class GeradorDeUsuario:
 
 
 if __name__ == "__main__":
-    gerador = GeradorDeUsuario()
+    gerador = BronzeUsuario()
     gerador.cria_usuarios_fakes(num_records=10000)
