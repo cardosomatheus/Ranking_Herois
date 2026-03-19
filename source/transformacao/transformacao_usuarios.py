@@ -8,7 +8,8 @@ from pyspark.sql.types import (
     StructField,
     StringType,
     IntegerType,
-    TimestampType
+    TimestampType,
+    LongType
 )
 
 logger = logging.getLogger(__name__)
@@ -59,12 +60,12 @@ class TranformacaoUsuarios:
 
         dataframe = dataframe.withColumn(
             'cpf_numerico',
-            regexp_replace(col('cpf'), r'\D', '')
+            regexp_replace(col('cpf'), r'\D', '').cast(LongType())
         )
 
         dataframe = dataframe.withColumn(
             'telefone_numerico',
-            regexp_replace(col('telefone'), r'\D', '')
+            regexp_replace(col('telefone'), r'\D', '').cast(LongType())
         )
 
         dataframe.dropDuplicates(['heroi_id', 'cpf_numerico'])
