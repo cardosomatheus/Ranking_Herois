@@ -50,3 +50,13 @@ Após a subida, a Dag contida no path airflow/dags Estara disponivel para execu�
 ```bash
 http://localhost:8080/
 ```
+
+
+Camada GOLD VAI BUSCAR O PARQUET UNIFICADO DE HEROIS E USUARIOS.
+Montar relatórios para a camada GOLD:
+    - top 10 herois com maiores pontuações.
+    - top 10 herois femininas com maiores pontuações.
+    - top 10 herois masculinos com maiores pontuações.
+    - Qtd de cada herois por raca.
+
+configurar um usuario e senha admin para airflow.

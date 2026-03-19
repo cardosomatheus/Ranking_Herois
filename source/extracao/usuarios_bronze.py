@@ -17,7 +17,7 @@ class BronzeUsuario:
         self.faker = Faker('pt_BR')
         self.herois_bronze = BronzeHerois()
 
-    def cria_usuarios_fakes(self, num_records: int = 1000) -> list:
+    def cria_usuarios_fakes(self, num_records: int = 10000) -> list:
         """
         Gera dados Fakes e os salva em um arquivo .txt
         Os registros gerados são: nome, email, telefone, cpf e ip de execução.
