@@ -1,6 +1,6 @@
 .env
 __pycache__/
 pontuacao_usuarios.txt
-source/datasets/silver_path/*
-source/datasets/gold_path/*
+#source/datasets/silver_path/*
+#source/datasets/gold_path/*
 logs/
