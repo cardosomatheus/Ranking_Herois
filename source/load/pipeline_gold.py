@@ -1,6 +1,6 @@
 from source.load.gold_herois_por_especies import GoldHeroisPorEspecies
 from source.load.gold_top10_herois import GoldTop10Herois
-from source.load.gold_top10_herois_femininos import GoldTop10HeroisFemininos 
+from source.load.gold_top10_herois_femininos import GoldTop10HeroisFemininos
 from source.load.gold_top10_herois_masculinos import GoldTop10HeroisMasculinos
 
 

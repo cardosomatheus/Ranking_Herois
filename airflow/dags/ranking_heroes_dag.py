@@ -2,8 +2,8 @@ from airflow.sdk import dag, task, chain
 from datetime import datetime, timezone, timedelta
 from pyspark.sql import SparkSession
 import logging
+from source.load.pipeline_gold import GoldAtualizaRelatorios
 from source.extracao.usuarios_bronze import BronzeUsuario
-from source.load.salva_parquet_load import SalvaParquetLoad
 from source.transformacao.transformacao_usuarios_herois import (
     TransformacaoUsuariosHerois
 )
@@ -50,13 +50,13 @@ def ranking_heroes_dag():
         camada_bronze.cria_usuarios_fakes(1000)
 
     @task()
-    def concatena_dados_gerados_salvando_em_parquet_silver():
+    def transforma_dados_gerados_silver():
         camada_silver = TransformacaoUsuariosHerois()
         camada_silver.executa_pipeline()
 
     @task()
-    def adicionado_novos_registros_em_parquet_gold():
-        camada_gold = SalvaParquetLoad()
+    def gera_relatorios_camada_gold():
+        camada_gold = GoldAtualizaRelatorios()
         camada_gold.executa_pipeline()
 
     @task()
@@ -76,8 +76,8 @@ def ranking_heroes_dag():
 
     inicio = iniciando_pipeline()
     bronze = gera_pontuacao_usuario_sobre_herois_bronze()
-    silver = concatena_dados_gerados_salvando_em_parquet_silver()
-    gold = adicionado_novos_registros_em_parquet_gold()
+    silver = transforma_dados_gerados_silver()
+    gold = gera_relatorios_camada_gold()
     fim = finalizando_pipeline()
     chain(inicio, bronze, silver, gold, fim)
 
