@@ -2,6 +2,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import functions as f
 from pyspark.sql.types import (
     StructType,
     StructField,
@@ -54,8 +55,16 @@ class TransformacaoHerois:
 
         return dataframe
 
+    def padroniza_dataframe_heroi(self, dataframe: DataFrame) -> DataFrame:
+        dataframe = dataframe.withColumn(
+            "Race",
+            f.regexp_replace(f.col("Race"), '-', "")
+        )
+        return dataframe
+
     def salva_csv_heroi_em_formato_parquet(self, dataframe: DataFrame):
         logger.info('Salvando Parquet heróis na camada SILVER.')
+        dataframe.show(10)
         dataframe.write.parquet(
             path=self.SILVER_PATH_HEROI,
             mode='overwrite',
@@ -66,6 +75,7 @@ class TransformacaoHerois:
 
     def executa_pipeline(self):
         dataframe = self.ler_csv_heroi()
+        dataframe = self.padroniza_dataframe_heroi(dataframe=dataframe)
         self.salva_csv_heroi_em_formato_parquet(dataframe)
 
 
