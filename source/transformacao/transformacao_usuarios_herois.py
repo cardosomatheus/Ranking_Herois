@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col
+from pyspark.errors import AnalysisException
 from pyspark.sql.types import (
     StructField,
     StructType,
@@ -117,6 +118,25 @@ class TransformacaoUsuariosHerois:
         logger.info('Associação Concluída com sucesso.')
         return df_herois_usuarios
 
+    def __evita_duplicidade_no_df_herois_silver(
+        self, dataframe: DataFrame
+    ) -> DataFrame:
+        try:
+            dataframe_old = self.spark\
+                            .read\
+                            .parquet(self.SILVER_PATH_USUARIOS_HEROIS)
+            dataframe = dataframe.join(
+                other=dataframe_old,
+                on=['id_heroi', 'cpf_usuario_numerico'],
+                how='left_anti'
+            )
+        except AnalysisException as e:
+            print("Aviso: parquet antiga não encontrado. Criando nova carga.")
+            print(f"messagem: {e}")
+
+        finally:
+            return dataframe
+
     def salva_dataframe_juntado_silver_parquet(
         self, df_herois_usuarios: DataFrame
     ):
@@ -130,11 +150,16 @@ class TransformacaoUsuariosHerois:
             logger.error(msg)
             raise ValueError(msg)
 
-        df_herois_usuarios.write.parquet(
-            path=self.SILVER_PATH_USUARIOS_HEROIS,
-            mode='append',
-            compression='snappy'
+        df_herois_usuarios = self.__evita_duplicidade_no_df_herois_silver(
+            dataframe=df_herois_usuarios
         )
+
+        if not df_herois_usuarios.isEmpty():
+            df_herois_usuarios.write.parquet(
+                path=self.SILVER_PATH_USUARIOS_HEROIS,
+                mode='append',
+                compression='snappy'
+            )
 
         logger.info('DF Herois x Usuarios salvo em parquet na camada SILVER.')
 
