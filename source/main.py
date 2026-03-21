@@ -14,12 +14,13 @@ def configura_setup_logging(file_path: str):
 
 
 configura_setup_logging('logging.yaml')
+
 if __name__ == "__main__":
+    from source.load.pipeline_gold import GoldAtualizaRelatorios
     from source.extracao.usuarios_bronze import BronzeUsuario
     from source.transformacao.transformacao_usuarios_herois import (
         TransformacaoUsuariosHerois
     )
-    # from source.load.salva_parquet_load import SalvaParquetLoad
 
     start_banner = """
     ###########################################################
@@ -45,8 +46,8 @@ if __name__ == "__main__":
     transformacao.executa_pipeline()
 
     # CAMADA GOLD
-#    classe_load = SalvaParquetLoad(spark)
-#    classe_load.executa_pipeline()
+    load_final = GoldAtualizaRelatorios()
+    load_final.executa_pipeline()
 
     end_banner = """
     ###########################################################
