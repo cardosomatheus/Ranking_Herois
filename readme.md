@@ -36,6 +36,7 @@ docker-compose up -d
 http://localhost:8080/
 ```
 
+3- Log com o usuario e senha do airflow.
 ```bash
     usuario: USER
     senha: USER123
