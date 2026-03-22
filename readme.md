@@ -1,5 +1,7 @@
 # Hero Analytics Pipeline
 
+https://excalidraw.com/#json=3WlFoMEbR4jcdXghZ6d2u,SOIOwezMm363jbmHCy7nFQ
+
 Este projeto consiste em um pipeline de dados para processar avaliações de heróis da marvel enviadas por usuários.
 Arquitetura e Fluxo de Dados.
 

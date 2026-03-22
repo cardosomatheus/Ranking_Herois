@@ -1,6 +1,5 @@
 from airflow.sdk import dag, task, chain
 from datetime import datetime, timezone, timedelta
-from pyspark.sql import SparkSession
 import logging
 from source.load.pipeline_gold import GoldAtualizaRelatorios
 from source.extracao.usuarios_bronze import BronzeUsuario
@@ -14,10 +13,6 @@ default_args = {
     'retries': 2,
     'retry_delay': timedelta(minutes=2)
 }
-spark = SparkSession.\
-    builder.\
-    appName('ranking de herois').\
-    getOrCreate()
 
 
 @dag(start_date=datetime.now(timezone.utc),
